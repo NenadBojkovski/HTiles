@@ -7,10 +7,10 @@ package tilemap.squaremap
 
 	public class SquareMap extends TileMap
 	{
-		private var _tileSideLenght: Number;
-		private var _tileHorizontalSideLenght: Number;
-		private var _tileVerticalSideLenght: Number;
-		private var _hasDiagonalNeighbors: Boolean; 
+		protected var _tileSideLenght: Number;
+		protected var _tileHorizontalSideLenght: Number;
+		protected var _tileVerticalSideLenght: Number;
+		protected var _hasDiagonalNeighbors: Boolean; 
 		
 		public function SquareMap(tileSideLenght: Number, hasDiagonalNeighbors:Boolean = true) {
 			_tileSideLenght = _tileHorizontalSideLenght = _tileVerticalSideLenght = tileSideLenght;
@@ -60,11 +60,11 @@ package tilemap.squaremap
 			return rotatePoint(x, y);
 		}
 		
-		private function get halfLenghtHorizontalSide(): Number {
+		protected function get halfLenghtHorizontalSide(): Number {
 			return _tileHorizontalSideLenght * 0.5;
 		}
 		
-		private function get halfLengthtVerticalSide(): Number {
+		protected function get halfLengthtVerticalSide(): Number {
 			return _tileVerticalSideLenght * 0.5;
 		}
 	}
