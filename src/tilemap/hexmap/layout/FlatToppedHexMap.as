@@ -6,6 +6,7 @@ package tilemap.hexmap.layout
 	import tilemap.hexmap.layout.helper.ILayoutHelper;
 	import tilemap.hexmap.tile.FlatToppedHexagon;
 	import tilemap.hexmap.tile.Hexagon;
+	import tilemap.hexmap.HexMap;
 	
 	public class FlatToppedHexMap extends HexMap
 	{

@@ -27,7 +27,7 @@ package tilemap.skewedmap
 		// Returns the tile under the map's x,y coodrinates
 		override public function getTile(x:Number, y:Number):Tile
 		{
-			var rotatedPoint: Point = inversePointRotation(x,y); 
+			var rotatedPoint: Point = inversePointRotation(x, y); 
 			var coveringRectTile: Tile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
 			var tilePoint: Point = convertToTileCoordinates(rotatedPoint.x, rotatedPoint.y, coveringRectTile);
 			var isInNeighboringTile: Boolean;
@@ -53,6 +53,13 @@ package tilemap.skewedmap
 			return rotatePoint(x, y);
 		}
 		
+		override public function translateToMapCoordinates(screenPoint:Point):Point {
+			var rotatedPoint: Point = inversePointRotation(screenPoint.x, screenPoint.y);
+			var translatedPoint: Point = new Point();
+			translatedPoint.x = rotatedPoint.x  + _skew * rotatedPoint.y * _tileHorizontalSideLenght / _tileVerticalSideLenght;
+			translatedPoint.y = rotatedPoint.y;
+			return translatedPoint;
+		}
 		//Returns rectangular helper tile which covers mostly the skew tile we try to locate, but also covers one neighboring
 		//tiles.
 		protected function getCoveringRectTile(x: Number, y: Number): Tile {

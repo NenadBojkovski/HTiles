@@ -11,12 +11,14 @@ package tilemap.isomap
 		private var _tileScaledHeight: Number;
 		private var _tileScaledWidth: Number;
 		private var _hasDiagonalNeighbors: Boolean;
+		private var _heightWidthRatio: Number;
 		
 		public function IsoMap(tileHeight: Number, hasDiagonalNeighbors:Boolean = true)
 		{
 			_originalTileHeight = _tileScaledHeight = tileHeight;
 			_tileScaledWidth = 2 * _originalTileHeight;
 			_hasDiagonalNeighbors = hasDiagonalNeighbors;
+			_heightWidthRatio = _tileScaledHeight / _tileScaledWidth;
 		}
 		
 		public function get tileHeight():Number
@@ -27,13 +29,15 @@ package tilemap.isomap
 		override public function set scaleTileVertical(value:Number):void
 		{
 			super.scaleTileVertical = value;
-			_tileScaledHeight = _originalTileHeight * value;			
+			_tileScaledHeight = _originalTileHeight * value;	
+			_heightWidthRatio = _tileScaledHeight / _tileScaledWidth;
 		}
 	
 		override public function set scaleTileHorizontal(value:Number):void
 		{
 			super.scaleTileHorizontal = value;
 			_tileScaledWidth = 2 * _originalTileHeight * value;
+			_heightWidthRatio = _tileScaledHeight / _tileScaledWidth;
 		}
 		
 		override public function getTile(x:Number, y:Number):Tile
@@ -56,6 +60,15 @@ package tilemap.isomap
 				}
 			}
 			return neighbors;
+		}
+		
+		override public function translateToMapCoordinates(screenPoint: Point):Point
+		{
+			var rotatedPoint: Point = inversePointRotation(screenPoint.x, screenPoint.y); 
+			var translatedPoint: Point = new Point();
+			translatedPoint.x = rotatedPoint.x * _heightWidthRatio + rotatedPoint.y;
+			translatedPoint.y = rotatedPoint.y - rotatedPoint.x * _heightWidthRatio;
+			return translatedPoint;
 		}
 		
 		override public function getCenter(tile:Tile):Point

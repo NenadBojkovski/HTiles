@@ -8,6 +8,11 @@ package tilemap
 	*/
 	public class TileMap implements ITileMap
 	{
+		public static const SQUARED: int = 0;
+		public static const SKEWED: int = 1;
+		public static const ISO: int = 2;
+		public static const HEXA: int = 3;
+		
 		protected const floor: Function = Math.floor;
 		protected const abs: Function = Math.abs;
 		protected const sqrt:Function = Math.sqrt;
@@ -31,20 +36,22 @@ package tilemap
 		
 		public function getTile(x:Number, y:Number):Tile
 		{
-			//TODO: implement function
 			return null;
 		}
 		
 		public function getNeighbors(tile:Tile):Vector.<Tile>
 		{
-			//TODO: implement function
 			return null;
 		}
 		
 		public function getCenter(tile:Tile):Point
 		{
-			//TODO: implement function
 			return null;
+		}
+		
+		public function translateToMapCoordinates(screenPoint: Point):Point
+		{
+			return inversePointRotation(screenPoint.x, screenPoint.y);
 		}
 		
 		public function get scaleTileVertical():Number

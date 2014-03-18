@@ -7,6 +7,7 @@ package tilemap
 		function getTile(x: Number, y: Number): Tile;
 		function getNeighbors(tile:Tile): Vector.<Tile>;
 		function getCenter(tile: Tile): Point;
+		function translateToMapCoordinates(screenPoint: Point): Point
 		function get scaleTileVertical(): Number;
 		function set scaleTileVertical(value: Number): void;
 		function get scaleTileHorizontal(): Number;

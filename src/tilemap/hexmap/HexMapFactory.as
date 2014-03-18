@@ -2,7 +2,6 @@
 {
 	import tilemap.ITileMap;
 	import tilemap.hexmap.layout.FlatToppedHexMap;
-	import tilemap.hexmap.layout.HexMap;
 	import tilemap.hexmap.layout.HexaMapLayout;
 	import tilemap.hexmap.layout.PointyToppedHexMap;
 	import tilemap.hexmap.layout.helper.ILayoutHelper;
