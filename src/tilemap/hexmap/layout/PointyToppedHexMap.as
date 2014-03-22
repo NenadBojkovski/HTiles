@@ -2,11 +2,12 @@ package tilemap.hexmap.layout
 {
 	import flash.geom.Point;
 	
+	import tilemap.PivotAlignment;
 	import tilemap.Tile;
+	import tilemap.hexmap.HexMap;
 	import tilemap.hexmap.layout.helper.ILayoutHelper;
 	import tilemap.hexmap.tile.Hexagon;
 	import tilemap.hexmap.tile.PointyToppedHexagon;
-	import tilemap.hexmap.HexMap;
 	
 	public class PointyToppedHexMap extends HexMap
 	{
@@ -14,12 +15,13 @@ package tilemap.hexmap.layout
 		{
 			super(radius, helper);
 			_hexagon = new PointyToppedHexagon(radius);
+			setCenterOffset(halfHorizontalLenght, halfVerticalLenght);
 		}
 		
 		// Returns the hexatile under the map's x,y coodrinates
 		override public function getTile(x:Number, y:Number):Tile
 		{
-			var rotatedPoint: Point = inversePointRotation(x,y); 
+			var rotatedPoint: Point = rotatePoint(x,y); 
 			var coveringRectTile: Tile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
 			var tilePoint: Point = convertToTileCoordinates(rotatedPoint.x, rotatedPoint.y, coveringRectTile);
 			var enclosure: int = _hexagon.getEnclosureOf(tilePoint.x, tilePoint.y);
@@ -35,34 +37,74 @@ package tilemap.hexmap.layout
 			return new Tile(ti, tj);
 		}
 		
-		override public function getNeighbors(tile: Tile):Vector.<Tile>
+		override public function getTileNeighbors(tile: Tile):Vector.<Tile>
 		{
 			return neighborOffsetsToTiles(tile, _helper.getNeighborsOffsets(tile.j, false));
 		}
 		
 		//Retruns the map coordinates of the central tile point.
-		override public function getCenter(tile:Tile):Point
+		override public function getTileCenter(tile:Tile):Point
 		{
-		 	var x: Number = tile.i * _hexagon.horizontalLength - _helper.getTileOffset(tile.j) * halfHorizontalLenght;
-			var y: Number = tile.j * _hexagon.coveringRectTileVLength;
-			return rotatePoint(x, y);
+		 	var x: Number = tile.i * _hexagon.horizontalLength - _helper.getTileOffset(tile.j) * halfHorizontalLenght - _pivotOffset.x;
+			var y: Number = tile.j * _hexagon.coveringRectTileVLength - _pivotOffset.y;
+			return inversePointRotation(x, y);
 		}
 		
 		//Returns rectangular helper tile which covers mostly the hexatile we try to locate, but also covers two neighboring
 		//tiles.
 		protected function getCoveringRectTile(x: Number, y: Number): Tile {
-			var jSq: int = floor((y + halfVerticalLenght) / _hexagon.coveringRectTileVLength);
-			var iSq: int = floor((x + (1 + _helper.getTileOffset(jSq)) * halfHorizontalLenght) / _hexagon.horizontalLength);
+			var jSq: int = floor((y + _totalOffest.y) / _hexagon.coveringRectTileVLength);
+			var iSq: int = floor((x + _totalOffest.x + _helper.getTileOffset(jSq) * halfHorizontalLenght) / _hexagon.horizontalLength);
 			return new Tile(iSq, jSq);
 		}
 		
 		// Converts maps coordinates into local, covering rect tile, cooridinates where 0,0 is at top left corner of the covering rect tile
 		protected function convertToTileCoordinates(x: Number, y: Number, coveringSqueredTile: Tile): Point {
 			var tilePoint: Point = new Point();
-			tilePoint.x = x + (1 + _helper.getTileOffset(coveringSqueredTile.j))* halfHorizontalLenght - 
+			tilePoint.x = x + _totalOffest.x + _helper.getTileOffset(coveringSqueredTile.j)* halfHorizontalLenght - 
 				coveringSqueredTile.i * _hexagon.horizontalLength;
-			tilePoint.y = y + halfVerticalLenght - coveringSqueredTile.j * _hexagon.coveringRectTileVLength;
+			tilePoint.y = y + _totalOffest.y - coveringSqueredTile.j * _hexagon.coveringRectTileVLength;
 			return tilePoint;
+		}
+		
+		override protected function updatePivot(): void { 
+			switch(_pivotAlignment)
+			{
+				case PivotAlignment.CORNER_0: {
+					_pivotOffset.x = 0; 
+					_pivotOffset.y = -halfVerticalLenght;	
+					break;
+				}
+				case PivotAlignment.CORNER_1: {
+					_pivotOffset.x = halfHorizontalLenght; 
+					_pivotOffset.y = _hexagon.coveringRectTileVLength - _hexagon.verticalLength;
+					break;
+				}
+				case PivotAlignment.CORNER_2: {
+					_pivotOffset.x = halfHorizontalLenght; 
+					_pivotOffset.y = _hexagon.verticalLength - _hexagon.coveringRectTileVLength;
+					break;
+				}
+				case PivotAlignment.CORNER_3: {
+					_pivotOffset.x = 0; 
+					_pivotOffset.y = halfVerticalLenght;
+					break;
+				}
+				case PivotAlignment.CORNER_4: {
+					_pivotOffset.x = -halfHorizontalLenght; 
+					_pivotOffset.y = _hexagon.verticalLength - _hexagon.coveringRectTileVLength;
+					break;
+				}
+				case PivotAlignment.CORNER_5: {
+					_pivotOffset.x = -halfHorizontalLenght; 
+					_pivotOffset.y = _hexagon.coveringRectTileVLength - _hexagon.verticalLength;
+					break;
+				}
+				default:
+				{
+					break;
+				}
+			}
 		}
 	}
 }

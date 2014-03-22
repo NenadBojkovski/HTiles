@@ -36,6 +36,7 @@ package tilemap.hexmap
 		override public function set scaleTileVertical(value:Number):void
 		{
 			_hexagon.scaleVertical = value;
+			setCenterOffset(halfHorizontalLenght, halfVerticalLenght);
 		}
 		
 		override public function get scaleTileHorizontal():Number
@@ -46,6 +47,7 @@ package tilemap.hexmap
 		override public function set scaleTileHorizontal(value:Number):void
 		{
 			_hexagon.scaleHorizontal = value;
+			setCenterOffset(halfHorizontalLenght, halfVerticalLenght);
 		}
 		
 		public function get hexagonRadius():Number
