@@ -2,6 +2,7 @@ package tilemap.squaremap
 {
 	import flash.geom.Point;
 	
+	import tilemap.ITile;
 	import tilemap.PivotAlignment;
 	import tilemap.Tile;
 	import tilemap.TileMap;
@@ -19,11 +20,17 @@ package tilemap.squaremap
 			setCenterOffset(centerOffsetX, centerOffsetY);
 		}
 		
+		/*
+		 * Returns the length of the side of the square 
+		*/
 		public function get tileSideLenght():Number
 		{
 			return _tileSideLenght;
 		}
-
+		
+		/*
+		 * @inheritDoc 
+		*/
 		override public function set scaleTileVertical(value:Number):void
 		{
 			super.scaleTileVertical = value;
@@ -31,6 +38,9 @@ package tilemap.squaremap
 			setCenterOffset(centerOffsetX, centerOffsetY);
 		}
 
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleTileHorizontal(value:Number):void
 		{
 			super.scaleTileHorizontal = value;
@@ -38,7 +48,10 @@ package tilemap.squaremap
 			setCenterOffset(centerOffsetX, centerOffsetY);
 		}
 		
-		override public function getTile(x:Number, y:Number):Tile {
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTile(x:Number, y:Number):ITile {
 			var tile: Tile = new Tile();
 			var rotatedPoint: Point = rotatePoint(x,y); 
 			tile.i = floor((rotatedPoint.x + _totalOffest.x)/_tileHorizontalSideLenght);
@@ -46,8 +59,11 @@ package tilemap.squaremap
 			return tile;
 		}
 		
-		override public function getTileNeighbors(tile:Tile):Vector.<Tile> {
-			var neighbors: Vector.<Tile> = new Vector.<Tile>();
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileNeighbors(tile: ITile):Vector.<ITile> {
+			var neighbors: Vector.<ITile> = new Vector.<ITile>();
 			for (var i: int = -1; i < 2; ++i) {
 				for (var j: int = -1; j < 2; ++j) {
 					if (_hasDiagonalNeighbors && ((i != 0) || (j != 0))  || (abs(i) != abs(j))) {
@@ -58,7 +74,10 @@ package tilemap.squaremap
 			return neighbors;
 		}
 		
-		override public function getTileCenter(tile:Tile):Point {
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileCenter(tile: ITile):Point {
 			var x: Number = tile.i * _tileHorizontalSideLenght - _pivotOffset.x;
 			var y: Number = tile.j * _tileVerticalSideLenght - _pivotOffset.y;
 			return inversePointRotation(x, y);

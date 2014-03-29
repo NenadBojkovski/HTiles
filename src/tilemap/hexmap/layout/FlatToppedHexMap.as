@@ -2,6 +2,7 @@ package tilemap.hexmap.layout
 {
 	import flash.geom.Point;
 	
+	import tilemap.ITile;
 	import tilemap.PivotAlignment;
 	import tilemap.Tile;
 	import tilemap.hexmap.HexMap;
@@ -19,11 +20,13 @@ package tilemap.hexmap.layout
 		}
 		
 		
-		// Returns the hexatile under the map's x,y coodrinates
-		override public function getTile(x:Number, y:Number):Tile
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTile(x:Number, y:Number): ITile
 		{
 			var rotatedPoint: Point = rotatePoint(x,y); 
-			var coveringRectTile: Tile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
+			var coveringRectTile: ITile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
 			var tilePoint: Point = convertToTileCoordinates(rotatedPoint.x, rotatedPoint.y, coveringRectTile);
 			var enclosure: int = _hexagon.getEnclosureOf(tilePoint.x, tilePoint.y);
 			var ti: Number = coveringRectTile.i;
@@ -38,29 +41,38 @@ package tilemap.hexmap.layout
 			return new Tile(ti, tj);
 		}
 		
-		
-		override public function getTileNeighbors(tile: Tile):Vector.<Tile>
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileNeighbors(tile: ITile): Vector.<ITile>
 		{
 			return neighborOffsetsToTiles(tile, _helper.getNeighborsOffsets(tile.i, true));
 		}
 		
-		override public function getTileCenter(tile:Tile):Point
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileCenter(tile: ITile):Point
 		{
 			var x: Number = tile.i * _hexagon.coveringRectTileHLength - _pivotOffset.x;
 			var y: Number = tile.j * _hexagon.verticalLength - _helper.getTileOffset(tile.i)*halfVerticalLenght - _pivotOffset.y;
 			return inversePointRotation(x, y);;
 		}
 		
-		//Returns rectangular helper tile which covers mostly the hexatile we try to locate, but also covers two neighboring
-		//tiles.
-		protected function getCoveringRectTile(x: Number, y: Number): Tile {
+		/*
+		* Returns rectangular helper tile which covers mostly the hexatile we try to locate, but also covers two neighboring
+		* tiles.
+		*/
+		protected function getCoveringRectTile(x: Number, y: Number): ITile {
 			var iSq: int = floor((x + _totalOffest.x) / _hexagon.coveringRectTileHLength);
 			var jSq: int = floor((y + _totalOffest.y + _helper.getTileOffset(iSq)* halfVerticalLenght) / _hexagon.verticalLength);
 			return new Tile(iSq, jSq);
 		}
 		
-		// Converts maps coordinates into local, covering rect tile, cooridinates where 0,0 is at top left corner of the covering rect tile
-		protected function convertToTileCoordinates(x: Number, y: Number, coveringSqueredTile: Tile): Point {
+		/*
+		* Converts maps coordinates into local, covering rect tile, cooridinates where 0,0 is at top left corner of the covering rect tile
+		*/
+		protected function convertToTileCoordinates(x: Number, y: Number, coveringSqueredTile: ITile): Point {
 			var tilePoint: Point = new Point();
 			tilePoint.x = x + _totalOffest.x - coveringSqueredTile.i * _hexagon.coveringRectTileHLength;
 			tilePoint.y = y + _totalOffest.y + _helper.getTileOffset(coveringSqueredTile.i) * halfVerticalLenght - 

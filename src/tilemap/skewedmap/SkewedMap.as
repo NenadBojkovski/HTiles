@@ -2,6 +2,7 @@ package tilemap.skewedmap
 {
 	import flash.geom.Point;
 	
+	import tilemap.ITile;
 	import tilemap.PivotAlignment;
 	import tilemap.Tile;
 	import tilemap.squaremap.SquareMap;
@@ -15,20 +16,28 @@ package tilemap.skewedmap
 			super(tileSideLenght, hasDiagonalNeighbors);
 		}
 		
+		/*
+		 * Sets skew of a tile. Only horizontal skew is possible. 
+		*/
 		public function set skew(value: Number): void {
 			_skew = value;
 		}
 		
+		/*
+		 * Returns the skew of a tile. 
+		*/
 		public function get skew():Number
 		{
 			return _skew;
 		}
 		
-		// Returns the tile under the map's x,y coodrinates
-		override public function getTile(x:Number, y:Number):Tile
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTile(x:Number, y:Number): ITile
 		{
 			var rotatedPoint: Point = rotatePoint(x, y); 
-			var coveringRectTile: Tile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
+			var coveringRectTile: ITile = getCoveringRectTile(rotatedPoint.x, rotatedPoint.y);
 			var tilePoint: Point = convertToTileCoordinates(rotatedPoint.x, rotatedPoint.y, coveringRectTile);
 			var isInNeighboringTile: Boolean;
 			if (_skew > 0) {
@@ -45,15 +54,20 @@ package tilemap.skewedmap
 			return new Tile(ti, tj);
 		}
 		
-		//Retruns the map coordinates of the central tile point.
-		override public function getTileCenter(tile:Tile):Point
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileCenter(tile: ITile):Point
 		{
 			var y: Number = tile.j * _tileVerticalSideLenght - _pivotOffset.y;
 			var x: Number = tile.i * _tileHorizontalSideLenght - tile.j * _skew * _tileHorizontalSideLenght - _pivotOffset.x;
 			return inversePointRotation(x, y);
 		}
 		
-		override public function screenToMapCoordinates(screenPoint:Point):Point {
+		/*
+		* @inheritDoc 
+		*/
+		override public function screenToMapCoordinates(screenPoint: Point): Point {
 			var rotatedPoint: Point = rotatePoint(screenPoint.x, screenPoint.y);
 			var translatedPoint: Point = new Point();
 			translatedPoint.x = rotatedPoint.x  + _skew * rotatedPoint.y * _tileHorizontalSideLenght / _tileVerticalSideLenght;
@@ -61,23 +75,31 @@ package tilemap.skewedmap
 			return translatedPoint;
 		}
 		
-		override public function mapToScreenCoordinates(mapPoint:Point): Point {
+		/*
+		* @inheritDoc 
+		*/
+		override public function mapToScreenCoordinates(mapPoint: Point): Point {
 			var translatedPoint: Point = new Point();
 			translatedPoint.x = mapPoint.x - _skew * mapPoint.y * _tileHorizontalSideLenght / _tileVerticalSideLenght;
 			translatedPoint.y = mapPoint.y;
 			return inversePointRotation(translatedPoint.x, translatedPoint.y);
 		}
 		
-		//Returns rectangular helper tile which covers mostly the skew tile we try to locate, but also covers one neighboring
-		//tiles.
-		protected function getCoveringRectTile(x: Number, y: Number): Tile {
+		/*
+		* Returns rectangular helper tile which covers mostly the skew tile that should be located, 
+		* but also covers one neighboring tile.
+		*/
+		protected function getCoveringRectTile(x: Number, y: Number): ITile {
 			var jSq: int = floor((y + _totalOffest.y) / _tileVerticalSideLenght);
 			var iSq: int = floor((x + _totalOffest.x + _skew * jSq * _tileHorizontalSideLenght) / _tileHorizontalSideLenght);
 			return new Tile(iSq, jSq);
 		}
 		
-		// Converts maps coordinates into local, covering rect tile, cooridinates where 0,0 is at top left corner of the covering rect tile
-		protected function convertToTileCoordinates(x: Number, y: Number, coveringSqueredTile: Tile): Point {
+		/*
+		* Converts maps coordinates into local, covering rect tile, cooridinates where 0,0 is at top left corner of 
+		* the covering rect tile
+		*/
+		protected function convertToTileCoordinates(x: Number, y: Number, coveringSqueredTile: ITile): Point {
 			var tilePoint: Point = new Point();
 			tilePoint.y = y + _totalOffest.y - coveringSqueredTile.j * _tileVerticalSideLenght;
 			tilePoint.x = x + _totalOffest.x + _skew * coveringSqueredTile.j * _tileHorizontalSideLenght - coveringSqueredTile.i * _tileHorizontalSideLenght;

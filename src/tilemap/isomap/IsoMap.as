@@ -2,6 +2,7 @@ package tilemap.isomap
 {
 	import flash.geom.Point;
 	
+	import tilemap.ITile;
 	import tilemap.PivotAlignment;
 	import tilemap.Tile;
 	import tilemap.TileMap;
@@ -23,11 +24,17 @@ package tilemap.isomap
 			setCenterOffset(0, halfTileHeight);
 		}
 		
+		/*
+		 * Returns the height of the iso tile. 
+		*/
 		public function get tileHeight():Number
 		{
 			return _originalTileHeight;
 		}
 
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleTileVertical(value:Number):void
 		{
 			super.scaleTileVertical = value;
@@ -36,6 +43,9 @@ package tilemap.isomap
 			setCenterOffset(0, halfTileHeight);
 		}
 	
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleTileHorizontal(value:Number):void
 		{
 			super.scaleTileHorizontal = value;
@@ -44,7 +54,10 @@ package tilemap.isomap
 			setCenterOffset(0, halfTileHeight);
 		}
 		
-		override public function getTile(x:Number, y:Number):Tile
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTile(x:Number, y:Number): ITile
 		{
 			var tile: Tile = new Tile();
 			var rotatedPoint: Point = rotatePoint(x,y); 
@@ -53,9 +66,12 @@ package tilemap.isomap
 			return tile;
 		}
 		
-		override public function getTileNeighbors(tile:Tile):Vector.<Tile>
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileNeighbors(tile: ITile): Vector.<ITile>
 		{
-			var neighbors: Vector.<Tile> = new Vector.<Tile>();
+			var neighbors: Vector.<ITile> = new Vector.<ITile>();
 			for (var i: int = -1; i < 2; ++i) {
 				for (var j: int = -1; j < 2; ++j) {
 					if (_hasDiagonalNeighbors && ((i != 0) || (j != 0))  || (abs(i) != abs(j))) {
@@ -66,6 +82,9 @@ package tilemap.isomap
 			return neighbors;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function screenToMapCoordinates(screenPoint: Point):Point
 		{
 			var rotatedPoint: Point = rotatePoint(screenPoint.x, screenPoint.y); 
@@ -75,6 +94,9 @@ package tilemap.isomap
 			return translatedPoint;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function mapToScreenCoordinates(mapPoint:Point): Point {
 			var translatedPoint: Point = new Point();
 			translatedPoint.x = (mapPoint.x - mapPoint.y) / (2 * _heightWidthRatio);
@@ -82,7 +104,10 @@ package tilemap.isomap
 			return inversePointRotation(translatedPoint.x, translatedPoint.y);
 		}
 		
-		override public function getTileCenter(tile:Tile):Point
+		/*
+		* @inheritDoc 
+		*/
+		override public function getTileCenter(tile: ITile): Point
 		{
 			var x: Number = (tile.i - tile.j) * halfTileWidth - _pivotOffset.x;
 			var y: Number = (tile.i + tile.j) * halfTileHeight - _pivotOffset.y;

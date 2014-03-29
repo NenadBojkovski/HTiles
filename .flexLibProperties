@@ -3,6 +3,7 @@
   <includeClasses>
     <classEntry path="tilemap.skewedmap.SkewedMap"/>
     <classEntry path="tilemap.PivotAlignment"/>
+    <classEntry path="tilemap.ITile"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

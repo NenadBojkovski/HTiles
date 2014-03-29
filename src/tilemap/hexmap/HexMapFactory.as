@@ -9,6 +9,9 @@
 
 	public class HexMapFactory 
 	{
+		/*
+		 * Creates hex map 
+		*/
 		public static function creatHexMap(hexRadius: Number, mapStyle: int, mapLayout: int): ITileMap
 		{
 			var hexMap: ITileMap;

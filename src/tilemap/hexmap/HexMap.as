@@ -2,6 +2,7 @@ package tilemap.hexmap
 {
 	import flash.geom.Point;
 	
+	import tilemap.ITile;
 	import tilemap.Tile;
 	import tilemap.TileMap;
 	import tilemap.hexmap.layout.helper.AxialLayoutHelper;
@@ -24,42 +25,61 @@ package tilemap.hexmap
 		{
 			_helper = helper;
 		}
-			
+		
+		/*
+		 * Retruns true if the hex map uses axial coordinates 
+		*/
 		public function get isAxial(): Boolean {
 			return _helper is AxialLayoutHelper;
 		}
+		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get scaleTileVertical():Number
 		{
 			return _hexagon.scaleVertical;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleTileVertical(value:Number):void
 		{
 			_hexagon.scaleVertical = value;
 			setCenterOffset(halfHorizontalLenght, halfVerticalLenght);
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get scaleTileHorizontal():Number
 		{
 			return _hexagon.scaleHorizontal;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleTileHorizontal(value:Number):void
 		{
 			_hexagon.scaleHorizontal = value;
 			setCenterOffset(halfHorizontalLenght, halfVerticalLenght);
 		}
 		
+		/*
+		* Returns the radius of the hexagon 
+		*/
 		public function get hexagonRadius():Number
 		{
 			return _hexagon.radius;
 		}
 		
-		protected function neighborOffsetsToTiles(tile: Tile, neighborOffsets: Vector.<Point>):Vector.<Tile>
+		protected function neighborOffsetsToTiles(tile: ITile, neighborOffsets: Vector.<Point>):Vector.<ITile>
 		{
-			var neighbors: Vector.<Tile> = new Vector.<Tile>();
+			var neighbors: Vector.<ITile> = new Vector.<ITile>();
 			var neighborOffset: Point;
-			var neighborTile: Tile;
+			var neighborTile: ITile;
 			var neigborOffsetsLenght: int = neighborOffsets.length;
 			for (var i: int = 0; i < neigborOffsetsLenght; ++i) {
 				neighborOffset = neighborOffsets[i];

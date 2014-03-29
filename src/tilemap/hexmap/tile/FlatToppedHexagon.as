@@ -14,32 +14,50 @@ package tilemap.hexmap.tile
 			_height = SQRT_3 * radius;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get horizontalLength():Number
 		{
 			return _diagonal;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get verticalLength():Number
 		{
 			return _height;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get coveringRectTileHLength():Number
 		{
 			return _side;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		override public function get coveringRectTileVLength():Number
 		{
 			return _height;
 		}
-				
+		
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleVertical(value:Number):void
 		{
 			super.scaleVertical = value;
 			_height = SQRT_3 * _radius * value;
 		}
 			
+		/*
+		* @inheritDoc 
+		*/
 		override public function set scaleHorizontal(value:Number):void
 		{
 			super.scaleHorizontal = value;
@@ -47,7 +65,9 @@ package tilemap.hexmap.tile
 			_side = 1.5 * _radius * value;
 		}
 		
-		// CAUTION - x,y are covering tile coordinates, relative to the internal coordinate system of the covering rectangular tile
+		/*
+		* @inheritDoc 
+		*/
 		override public function getEnclosureOf(x:Number, y:Number):int
 		{
 			var isInHexagon: Boolean = x >= triangleHeight * abs(1 - y / halfHeight);

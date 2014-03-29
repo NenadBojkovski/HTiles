@@ -8,21 +8,33 @@ package tilemap.hexmap.layout.helper
 		{
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		public function getTileOffset(j:int):int
 		{
 			return j&1;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		public function getFartherTriangleOffset(j:int):int
 		{
 			return getTileOffset(j);
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		public function getNearerTriangleOffset(j:int):int
 		{
 			return getTileOffset(j) - 1;
 		}
 		
+		/*
+		* @inheritDoc 
+		*/
 		public function getNeighborsOffsets(j: int, isFlatTopped: Boolean): Vector.<Point> {
 
 			if (isFlatTopped) {
